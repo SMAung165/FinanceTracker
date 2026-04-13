@@ -1,20 +1,23 @@
 package com.soemoe.financetracker.models;
 
-public abstract class Transactions {
+public abstract class Transaction {
+    private double transactionAmount;
+    private Category category;
+    private String description;
     private String transactionDate;
     private String transactionTime;
-    private double transactionAmount;
-    private String description;
-    private Category category;
+
+
 
     //constructors
-    public Transactions(String transactionDate, String transactionTime, double transactionAmount, String description, Category category) {
+    public Transaction(double transactionAmount, Category category, String description, String transactionDate, String transactionTime) {
+        this.transactionAmount = transactionAmount;
+        this.category = category;
+        this.description = description;
         this.transactionDate = transactionDate;
         this.transactionTime = transactionTime;
-        this.transactionAmount = transactionAmount;
-        this.description = description;
-        this.category = category;
     }
+
     //getters
     public String getTransactionDate() {
         return transactionDate;
