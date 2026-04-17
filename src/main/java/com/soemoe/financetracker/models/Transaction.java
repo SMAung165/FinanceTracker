@@ -1,5 +1,8 @@
 package com.soemoe.financetracker.models;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 public abstract class Transaction {
     private final double transactionAmount;
     private final Category category;
@@ -8,12 +11,12 @@ public abstract class Transaction {
     private final String transactionTime;
 
     //constructors
-    public Transaction(double transactionAmount, Category category, String description, String transactionDate, String transactionTime) {
+    public Transaction(double transactionAmount, Category category, String description) {
         this.transactionAmount = transactionAmount;
         this.category = category;
         this.description = description;
-        this.transactionDate = transactionDate;
-        this.transactionTime = transactionTime;
+        this.transactionDate = LocalDate.now().toString();
+        this.transactionTime = LocalTime.now().toString();
     }
 
     //getters
@@ -36,4 +39,5 @@ public abstract class Transaction {
     public Category getCategory() {
         return category;
     }
+
 }

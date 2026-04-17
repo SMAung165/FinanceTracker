@@ -21,9 +21,18 @@ public class Main {
             System.out.print("> ");
             if (input.length() == 1 && "iesq".contains(input)) {
                 switch (input) {
-                    case "i" -> financeService.processTransaction(new Income(financeUI.getAmount(input)));
-                    case "e" -> financeService.processTransaction(new Expense(financeUI.getAmount(input)));
+                    case "i" -> financeService.processTransaction(
+                            new Income(
+                                    financeUI.getAmount(input),
+                                    financeUI.getUserDescription()
+                            ));
+                    case "e" -> financeService.processTransaction(
+                            new Expense(
+                                    financeUI.getAmount(input),
+                                    financeUI.getUserDescription()
+                            ));
                     case "s" -> financeUI.showBalance(financeService.getBalance());
+                    case "t" -> financeUI.showTransactionHistory(financeService.getTransactionHistory());
                     case "q" -> System.exit(0);
                 }
                 continue;

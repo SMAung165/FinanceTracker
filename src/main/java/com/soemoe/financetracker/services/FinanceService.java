@@ -4,12 +4,20 @@ import com.soemoe.financetracker.models.Expense;
 import com.soemoe.financetracker.models.Income;
 import com.soemoe.financetracker.models.Transaction;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class FinanceService {
     private final Wallet wallet;
 
     //constructors
     public FinanceService() {
         wallet = new Wallet();
+    }
+
+    //getters
+    public double getBalance() {
+        return wallet.getBalance();
     }
 
     //methods
@@ -23,8 +31,7 @@ public class FinanceService {
         wallet.setBalance(balance);
     }
 
-    public double getBalance() {
-        return wallet.getBalance();
+    public ArrayList<String> getTransactionHistory(){
+        return new ArrayList(Arrays.asList());
     }
-
 }

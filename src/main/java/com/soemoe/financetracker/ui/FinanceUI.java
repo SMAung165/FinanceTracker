@@ -2,6 +2,7 @@ package com.soemoe.financetracker.ui;
 
 import com.soemoe.financetracker.utils.ValidationUtils;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FinanceUI {
@@ -31,8 +32,19 @@ public class FinanceUI {
         }
     }
 
+    public String getUserDescription() {
+        System.out.println("Description: ");
+        String description = userInput.nextLine();
+        System.out.println("Description added!");
+        return description;
+    }
+
     public void showBalance(double balance) {
         System.out.printf("Your balance is: %.2f$\n", balance);
+    }
+
+    public void showTransactionHistory(ArrayList<String> transactionHistory){
+        //show all history
     }
 
 
