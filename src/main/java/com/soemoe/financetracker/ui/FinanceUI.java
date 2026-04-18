@@ -44,7 +44,7 @@ public class FinanceUI {
     }
 
     public void showTransactionHistory(ArrayList<String> transactionHistory){
-        //show all history
+        System.out.println(transactionHistory);
     }
 
 

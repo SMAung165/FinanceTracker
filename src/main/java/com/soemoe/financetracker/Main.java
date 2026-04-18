@@ -31,7 +31,10 @@ public class Main {
                                     financeUI.getAmount(input),
                                     financeUI.getUserDescription()
                             ));
-                    case "s" -> financeUI.showBalance(financeService.getBalance());
+                    case "s" -> {
+                        financeUI.showBalance(financeService.getBalance());
+                        financeUI.showTransactionHistory(financeService.getTransactionHistory());
+                    }
                     case "t" -> financeUI.showTransactionHistory(financeService.getTransactionHistory());
                     case "q" -> System.exit(0);
                 }

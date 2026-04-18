@@ -3,16 +3,18 @@ package com.soemoe.financetracker.services;
 import com.soemoe.financetracker.models.Expense;
 import com.soemoe.financetracker.models.Income;
 import com.soemoe.financetracker.models.Transaction;
+import com.soemoe.financetracker.utils.TransactionHistoryLoader;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class FinanceService {
     private final Wallet wallet;
+    private final TransactionHistoryLoader transactionHistoryLoader;
 
     //constructors
     public FinanceService() {
         wallet = new Wallet();
+        transactionHistoryLoader = new TransactionHistoryLoader();
     }
 
     //getters
@@ -29,9 +31,10 @@ public class FinanceService {
             balance += income.getTransactionAmount();
         }
         wallet.setBalance(balance);
+        transactionHistoryLoader.setTransactionList(transaction);
     }
 
     public ArrayList<String> getTransactionHistory(){
-        return new ArrayList(Arrays.asList());
+        return transactionHistoryLoader.getTransactionList();
     }
 }
