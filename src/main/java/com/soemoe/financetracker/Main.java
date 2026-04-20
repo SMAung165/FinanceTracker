@@ -16,10 +16,11 @@ public class Main {
     private static void startProgram(FinanceUI financeUI, FinanceService financeService) {
         String input;
         System.out.println("Welcome!");
+        System.out.println("---------------------------------");
         while (true) {
             input = financeUI.requestUserInput();
             System.out.print("> ");
-            if (input.length() == 1 && "iesq".contains(input)) {
+            if (input.length() == 1 && "ieshq".contains(input)) {
                 switch (input) {
                     case "i" -> financeService.processTransaction(
                             new Income(
@@ -31,11 +32,8 @@ public class Main {
                                     financeUI.getAmount(input),
                                     financeUI.getUserDescription()
                             ));
-                    case "s" -> {
-                        financeUI.showBalance(financeService.getBalance());
-                        financeUI.showTransactionHistory(financeService.getTransactionHistory());
-                    }
-                    case "t" -> financeUI.showTransactionHistory(financeService.getTransactionHistory());
+                    case "s" -> financeUI.showBalance(financeService.getBalance());
+                    case "h" -> financeUI.showTransactionHistory(financeService.getTransactionHistory());
                     case "q" -> System.exit(0);
                 }
                 continue;
