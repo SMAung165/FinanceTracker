@@ -19,19 +19,27 @@ public class Main {
         System.out.println("---------------------------------");
         while (true) {
             input = financeUI.requestUserInput();
-            System.out.print("> ");
-            if (input.length() == 1 && "ieshq".contains(input)) {
+            if (input.length() == 1 && "iecshq".contains(input)) {
                 switch (input) {
-                    case "i" -> financeService.processTransaction(
+                    case "i" -> {
+                        financeService.processTransaction(
                             new Income(
-                                    financeUI.getAmount(input),
-                                    financeUI.getUserDescription()
+                                    financeUI.requestUserAmount(input),
+                                    financeUI.requestUserDescription(),
+                                    financeUI.assignUserCategory(financeService.getCategoryList("INCOME"))
                             ));
-                    case "e" -> financeService.processTransaction(
+                        System.out.println("Income added!");
+                    }
+                    case "e" ->{
+                        financeService.processTransaction(
                             new Expense(
-                                    financeUI.getAmount(input),
-                                    financeUI.getUserDescription()
+                                    financeUI.requestUserAmount(input),
+                                    financeUI.requestUserDescription(),
+                                    financeUI.assignUserCategory(financeService.getCategoryList("EXPENSE"))
                             ));
+                        System.out.println("Expense added!");
+                    }
+                    case "c" -> financeService.setCategoryRecordSaver(financeUI.requestUserCategoryValues());
                     case "s" -> financeUI.showBalance(financeService.getBalance());
                     case "h" -> financeUI.showTransactionHistory(financeService.getTransactionHistory());
                     case "q" -> System.exit(0);

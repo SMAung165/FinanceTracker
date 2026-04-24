@@ -1,8 +1,11 @@
 package com.soemoe.financetracker.services;
 
+import com.soemoe.financetracker.models.Category;
 import com.soemoe.financetracker.models.Expense;
 import com.soemoe.financetracker.models.Income;
 import com.soemoe.financetracker.models.Transaction;
+import com.soemoe.financetracker.utils.CategoryRecordLoader;
+import com.soemoe.financetracker.utils.CategoryRecordSaver;
 import com.soemoe.financetracker.utils.TransactionRecordLoader;
 import com.soemoe.financetracker.utils.TransactionRecordSaver;
 
@@ -11,13 +14,14 @@ import java.util.ArrayList;
 public class FinanceService {
     private final Wallet wallet;
     private final TransactionRecordSaver transactionRecordSaver;
-    private final TransactionRecordLoader transactionRecordLoader;
+    private final CategoryRecordSaver categoryRecordSaver;
 
     //constructors
     public FinanceService() {
         transactionRecordSaver = new TransactionRecordSaver();
-        transactionRecordLoader = new TransactionRecordLoader();
-        wallet = new Wallet(transactionRecordLoader.getTransactionList());
+        categoryRecordSaver = new CategoryRecordSaver();
+
+        wallet = new Wallet(new TransactionRecordLoader().getTransactionList(), new CategoryRecordLoader().getCategoryList());
         wallet.setBalance(getCurrentBalance());
     }
 
@@ -29,7 +33,7 @@ public class FinanceService {
     //methods
     private double getCurrentBalance() {
         double currentBalance = 0;
-        for (Transaction transaction : transactionRecordLoader.getTransactionList()) {
+        for (Transaction transaction : wallet.getTransactions()) {
             currentBalance += balanceCalculator(transaction);
         }
         return currentBalance;
@@ -53,6 +57,25 @@ public class FinanceService {
     }
 
     public ArrayList<Transaction> getTransactionHistory() {
-        return transactionRecordLoader.getTransactionList();
+        return wallet.getTransactions();
+    }
+
+    public ArrayList<Category> getCategoryList(String categoryType) {
+        ArrayList<Category> categoryList = new ArrayList<>();
+
+        for (Category category : wallet.getCategories()) {
+            if (category.getCategoryType().equals(categoryType.toLowerCase())) categoryList.add(category);
+        }
+
+        if (categoryList.isEmpty()) {
+            categoryList.add(new Category(categoryType, "temp", "temp"));
+        }
+
+        return categoryList;
+    }
+
+    public void setCategoryRecordSaver(ArrayList<String> userDefinedValues) {
+        wallet.addNewCategory(new Category(userDefinedValues.get(0), userDefinedValues.get(1), userDefinedValues.get(2)));
+        categoryRecordSaver.saveCategoryRecord(wallet.getCategories());
     }
 }
