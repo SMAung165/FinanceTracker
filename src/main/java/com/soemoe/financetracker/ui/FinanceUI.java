@@ -28,6 +28,9 @@ public class FinanceUI {
         while (true) {
             System.out.printf("%s amount: ", transactionType);
             String amount = userInput.nextLine();
+
+            if (cancelProcess(amount)) return -1; //cancel current process?
+
             if (ValidationUtils.isNumeric(amount) && (Double.parseDouble(amount) >= 0)) {
                 return Double.parseDouble(amount);
             }
@@ -38,7 +41,9 @@ public class FinanceUI {
     public String requestUserDescription() {
         System.out.println("---------------------------------");
         System.out.print("Description: ");
-        return userInput.nextLine();
+        String userDescription = userInput.nextLine();
+        if(cancelProcess(userDescription)) return null; //cancel current process?
+        return userDescription;
     }
 
     public void showBalance(double balance) {
@@ -60,15 +65,18 @@ public class FinanceUI {
 
     public ArrayList<String> requestUserCategoryValues() {
         ArrayList<String> userInputValues = new ArrayList<>();
-        String[] prompts = {"TYPE","LABEL","DESCRIPTION"};
+        String[] prompts = {"TYPE", "LABEL", "DESCRIPTION"};
         String userInputValue;
         System.out.println("---------------------------------");
         for (String prompt : prompts) {
-            System.out.print(prompt + ": ");
             if (prompt.equals("TYPE")) {
+                System.out.println("Select Category Type");
+                System.out.println("---------------------------------");
                 while (true) {
                     System.out.println("i -> income, e -> expense");
+                    System.out.print("> ");
                     userInputValue = userInput.nextLine().toLowerCase();
+                    if(cancelProcess(userInputValue)) return null; //cancel current process?
                     if (("ie").contains(userInputValue) && userInputValue.length() == 1) {
                         userInputValue = userInputValue.equals("i") ? "income" : "expense";
                         break;
@@ -76,6 +84,7 @@ public class FinanceUI {
                     System.out.println("Invalid selection!");
                 }
             } else {
+                System.out.print(prompt+": ");
                 userInputValue = userInput.nextLine();
             }
             userInputValues.add(userInputValue);
@@ -89,10 +98,19 @@ public class FinanceUI {
         int i = 0;
         System.out.println("Select category");
         System.out.println("---------------");
+
         for (Category category : categoryList) {
             System.out.println(i++ + ". " + category.getLabel());
         }
+
         System.out.print("> ");
-        return categoryList.get(Integer.parseInt(userInput.nextLine()));
+        String userChoice = userInput.nextLine();
+        if(cancelProcess(userChoice)) return null; //cancel current process?
+        return categoryList.get(Integer.parseInt(userChoice));
+    }
+
+    //utils
+    private boolean cancelProcess(String input) {
+        return input.equals("exit");
     }
 }
