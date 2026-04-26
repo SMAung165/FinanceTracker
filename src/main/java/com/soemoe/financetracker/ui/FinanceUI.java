@@ -16,17 +16,17 @@ public class FinanceUI {
     }
 
     //methods
-    public String requestUserInput() {
+    public String requestUserOperationSelection() {
         System.out.println("i -> add income, e -> add expense, c -> create category, s -> show balance, h -> show all transactions, q -> quit");
         System.out.print("> ");
         return userInput.nextLine().toLowerCase();
     }
 
     public double requestUserAmount(String transactionType) {
-        transactionType = transactionType.equals("i") ? "Income" : "Expense";
+        transactionType = transactionType.equals("i") ? "INCOME" : "EXPENSE";
         System.out.println("---------------------------------");
         while (true) {
-            System.out.printf("%s amount: ", transactionType);
+            System.out.printf("%s AMOUNT: ", transactionType);
             String amount = userInput.nextLine();
 
             if (cancelProcess(amount)) return -1; //cancel current process?
@@ -40,10 +40,41 @@ public class FinanceUI {
 
     public String requestUserDescription() {
         System.out.println("---------------------------------");
-        System.out.print("Description: ");
+        System.out.print("DESCRIPTION: ");
         String userDescription = userInput.nextLine();
-        if(cancelProcess(userDescription)) return null; //cancel current process?
+        if (cancelProcess(userDescription)) return null; //cancel current process?
         return userDescription;
+    }
+
+    public Category requestUserCategory(ArrayList<Category> categoryList) {
+
+        if (categoryList.isEmpty()) {
+            System.out.println("No category found! Please create one first!");
+            return null;
+        }
+
+        System.out.println("---------------------------------");
+        System.out.println("SELECT CATEGORY");
+        System.out.println("---------------");
+
+        while (true) {
+            int i = 0;
+            for (Category category : categoryList) {
+                System.out.println(i++ + ". " + category.getLabel());
+            }
+            System.out.print("> ");
+            String userChoice = userInput.nextLine();
+
+            if (ValidationUtils.isNumeric(userChoice) && Integer.parseInt(userChoice) >= 0 && Integer.parseInt(userChoice) < categoryList.size()) {
+                return categoryList.get(Integer.parseInt(userChoice));
+            } else if (cancelProcess(userChoice)) {
+                return null;
+            } else {
+                System.out.println("Invalid Input!");
+                System.out.println("--------------");
+            }
+        }
+
     }
 
     public void showBalance(double balance) {
@@ -63,7 +94,7 @@ public class FinanceUI {
         }
     }
 
-    public ArrayList<String> requestUserCategoryValues() {
+    public ArrayList<String> requestUserNewCategoryValues() {
         ArrayList<String> userInputValues = new ArrayList<>();
         String[] prompts = {"TYPE", "LABEL", "DESCRIPTION"};
         String userInputValue;
@@ -84,29 +115,14 @@ public class FinanceUI {
                     System.out.println("Invalid selection!");
                 }
             } else {
-                System.out.print(prompt+": ");
+                System.out.print(prompt + ": ");
                 userInputValue = userInput.nextLine();
+                if(cancelProcess(userInputValue)) return null; //cancel current process?
             }
             userInputValues.add(userInputValue);
         }
         System.out.println("Success!");
         return userInputValues;
-    }
-
-    public Category assignUserCategory(ArrayList<Category> categoryList) {
-        System.out.println("---------------------------------");
-        int i = 0;
-        System.out.println("Select category");
-        System.out.println("---------------");
-
-        for (Category category : categoryList) {
-            System.out.println(i++ + ". " + category.getLabel());
-        }
-
-        System.out.print("> ");
-        String userChoice = userInput.nextLine();
-        if(cancelProcess(userChoice)) return null; //cancel current process?
-        return categoryList.get(Integer.parseInt(userChoice));
     }
 
     //utils

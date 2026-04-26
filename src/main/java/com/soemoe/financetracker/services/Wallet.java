@@ -29,16 +29,15 @@ public class Wallet {
         return categories;
     }
 
-    //setters
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
     //methods
     public void addNewTransaction(Transaction transaction) {
         transactions.add(transaction);
     }
     public void addNewCategory(Category category){
         categories.add(category);
+    }
+
+    public void updateBalance(double amount){
+        balance += amount;
     }
 }

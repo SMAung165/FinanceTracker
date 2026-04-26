@@ -1,6 +1,7 @@
 package com.soemoe.financetracker;
 
 import com.soemoe.financetracker.models.Category;
+import com.soemoe.financetracker.models.Expense;
 import com.soemoe.financetracker.models.Income;
 import com.soemoe.financetracker.services.FinanceService;
 import com.soemoe.financetracker.ui.FinanceUI;
@@ -17,50 +18,55 @@ public class Main {
 
     private static void startProgram(FinanceUI financeUI, FinanceService financeService) {
         String input;
-        ArrayList<Object> userInputValues;
+        double requestedUserAmount;
+        String requestedUserDescription;
+        Category requestedUserCategory;
+
         ArrayList<String> userCreateCategoryValues;
 
         System.out.println("Welcome!");
         System.out.println("---------------------------------");
         while (true) {
-            input = financeUI.requestUserInput();
+            input = financeUI.requestUserOperationSelection();
             if (input.length() == 1 && "iecshq".contains(input)) {
                 switch (input) {
                     case "i" -> {
                         System.out.println("Tip: Type 'exit' to cancel");
-                        userInputValues = new ArrayList<>();
-                        userInputValues.add(financeUI.requestUserAmount(input));
-                        if ((double) userInputValues.get(0) == -1) break;
 
-                        userInputValues.add(financeUI.requestUserDescription());
-                        if ((userInputValues.get(1)) == null) break;
+                        requestedUserAmount = financeUI.requestUserAmount(input);
+                        if (requestedUserAmount == -1) break;
 
-                        userInputValues.add(financeUI.assignUserCategory(financeService.getCategoryList("INCOME")));
-                        if (userInputValues.get(2) == null) break;
+                        requestedUserDescription = financeUI.requestUserDescription();
+                        if (requestedUserDescription == null) break;
 
-                        financeService.processTransaction(new Income((double) userInputValues.get(0), (String) userInputValues.get(1), (Category) userInputValues.get(2)));
+                        requestedUserCategory = financeUI.requestUserCategory(financeService.getCategoryList("INCOME"));
+                        if (requestedUserCategory == null) break;
+
+                        processTransactionType(input,financeService,requestedUserAmount,requestedUserDescription,requestedUserCategory);
+
                         System.out.println("Income added!");
                     }
                     case "e" -> {
                         System.out.println("Tip: Type 'exit' to cancel");
-                        userInputValues = new ArrayList<>();
-                        userInputValues.add(financeUI.requestUserAmount(input));
-                        if ((double) userInputValues.get(0) == -1) break;
 
-                        userInputValues.add(financeUI.requestUserDescription());
-                        if ((userInputValues.get(1)) == null) break;
+                        requestedUserAmount = financeUI.requestUserAmount(input);
+                        if (requestedUserAmount == -1) break;
 
-                        userInputValues.add(financeUI.assignUserCategory(financeService.getCategoryList("EXPENSE")));
-                        if (userInputValues.get(2) == null) break;
+                        requestedUserDescription = financeUI.requestUserDescription();
+                        if (requestedUserDescription == null) break;
 
-                        financeService.processTransaction(new Income((double) userInputValues.get(0), (String) userInputValues.get(1), (Category) userInputValues.get(2)));
+                        requestedUserCategory = financeUI.requestUserCategory(financeService.getCategoryList("EXPENSE"));
+                        if (requestedUserCategory == null) break;
+
+                        processTransactionType(input,financeService,requestedUserAmount,requestedUserDescription,requestedUserCategory);
+
                         System.out.println("Expense added!");
                     }
                     case "c" -> {
                         System.out.println("Tip: Type 'exit' to cancel");
-                        userCreateCategoryValues = financeUI.requestUserCategoryValues();
+                        userCreateCategoryValues = financeUI.requestUserNewCategoryValues();
                         if (userCreateCategoryValues == null) break;
-                        financeService.setCategoryRecordSaver(userCreateCategoryValues);
+                        financeService.addCategory(userCreateCategoryValues);
                     }
                     case "s" -> financeUI.showBalance(financeService.getBalance());
                     case "h" -> financeUI.showTransactionHistory(financeService.getTransactionHistory());
@@ -70,6 +76,22 @@ public class Main {
             }
             System.out.println("Invalid input! Please Try again.");
         }
+    }
+
+    private static void processTransactionType(String type, FinanceService financeService, double requestedUserAmount, String requestedUserDescription, Category requestedUserCategory) {
+        switch (type) {
+            case "i" -> financeService.processTransaction(new Income(
+                    requestedUserAmount,
+                    requestedUserDescription,
+                    requestedUserCategory
+            ));
+            case "e" -> financeService.processTransaction(new Expense(
+                    requestedUserAmount,
+                    requestedUserDescription, requestedUserCategory));
+
+            default -> System.out.println("Invalid operation!");
+        }
+
     }
 
 }

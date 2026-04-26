@@ -22,7 +22,7 @@ public class FinanceService {
         categoryRecordSaver = new CategoryRecordSaver();
 
         wallet = new Wallet(new TransactionRecordLoader().getTransactionList(), new CategoryRecordLoader().getCategoryList());
-        wallet.setBalance(getCurrentBalance());
+        wallet.updateBalance(getCurrentBalance());
     }
 
     //getters
@@ -41,7 +41,7 @@ public class FinanceService {
 
     public void processTransaction(Transaction transaction) {
         double balance = balanceCalculator(transaction);
-        wallet.setBalance(balance);
+        wallet.updateBalance(balance);
         wallet.addNewTransaction(transaction);
         transactionRecordSaver.saveTransactionRecord(wallet.getTransactions());
     }
@@ -66,15 +66,10 @@ public class FinanceService {
         for (Category category : wallet.getCategories()) {
             if (category.getCategoryType().equals(categoryType.toLowerCase())) categoryList.add(category);
         }
-
-        if (categoryList.isEmpty()) {
-            categoryList.add(new Category(categoryType, "temp", "temp"));
-        }
-
         return categoryList;
     }
 
-    public void setCategoryRecordSaver(ArrayList<String> userDefinedValues) {
+    public void addCategory(ArrayList<String> userDefinedValues) {
         wallet.addNewCategory(new Category(userDefinedValues.get(0), userDefinedValues.get(1), userDefinedValues.get(2)));
         categoryRecordSaver.saveCategoryRecord(wallet.getCategories());
     }
